@@ -1,9 +1,9 @@
 var wordList = [
-  "computer",
-  "apple",
-  "laptop",
-  "directory",
-  "terminal"
+  "computer"
+  // "apple",
+  // "laptop",
+  // "directory",
+  // "terminal"
   ]
         
 var chosenWord = "";
@@ -23,7 +23,7 @@ function startGame(){
     wrongGuesses = [];
 
     chosenWord = wordList[Math.floor(Math.random() * wordList.length)];
-    lettersInChosenWord = chosenWord.split(" ");
+    lettersInChosenWord = chosenWord.split("");
     numBlanks = lettersInChosenWord.length;
 
     for (var i = 0; i < numBlanks; i++){
@@ -32,10 +32,12 @@ function startGame(){
 
     document.getElementById('word-blank').innerHTML = blanksAndSuccesses.join(" ");
     document.getElementById('guesses-left').innerHTML = numGuesses;
-    document.getElementById('wrong-guesses').innerHTML = wrongGuesses.join(" ");
-    	
+
+}
 
 function checkLetters(letter){
+
+    var letterInWord = false;
 
     for(var i=0; i < numBlanks; i++){
         if(chosenWord[i] === letter){
@@ -43,12 +45,31 @@ function checkLetters(letter){
 
     	}
     }
-}
 
-    if(lettersInChosenWord === blanksAndSuccesses){
+    if(letterInWord){
+        for(i=0; i < numBlanks; i++){
+            if(chosenWord[i] === letter){
+            blanksAndSuccesses[i] = letter;
+            }
+        }
+    } // closes first if
+    else{
+        numGuesses --;
+        wrongGuesses.push(letter)
+    }
+} // closes checkLetters fct
+
+function roundComplete(){
+
+    document.getElementById('word-blank').innerHTML = blanksAndSuccesses.join(" ");
+    document.getElementById('guesses-left').innerHTML = numGuesses;
+    document.getElementById('wrong-guesses').innerHTML = wrongGuesses.join(" ");
+
+    if(lettersInChosenWord.join(" ") === blanksAndSuccesses.join(" ")){
         winCounter++;
         alert("You Win!");
         document.getElementById('win-counter').innerHTML = winCounter;
+        startGame();
     }
 
     else if(numGuesses === 0){
@@ -58,11 +79,10 @@ function checkLetters(letter){
     }
 }
 
-function roundComplete(){
 
 startGame();
 document.onkeyup = function(event){
-    var letter.Guessed = String.fromCharCode(event.keyCode).toLowerCase();
+    var letterGuessed = String.fromCharCode(event.keyCode).toLowerCase();
     console.log("this is the letter we typed", letterGuessed)
     checkLetters(letterGuessed)
     roundComplete();
